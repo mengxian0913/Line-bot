@@ -121,9 +121,4 @@ if __name__ == "__main__":
     app.run()
 
 
-tex = input()
-
-handle_message(tex)
-
-
 
