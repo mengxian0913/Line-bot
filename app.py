@@ -7,7 +7,7 @@ import time
 # nonfunction
 
 def nonfunction():
-    return
+    return "meow"
 
 
 # SPEECH NWES BOT
@@ -109,9 +109,7 @@ def handle_message(event):
              break
         if now_event != 0:
             break
-    
-    if now_event == 0:
-        return
+
     
     reply_text = function_list[now_event]()
     line_bot_api.reply_message(
@@ -121,6 +119,11 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run()
+
+
+tex = input()
+
+handle_message(tex)
 
 
 
