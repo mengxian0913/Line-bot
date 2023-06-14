@@ -18,6 +18,12 @@ url = "https://www.iecs.fcu.edu.tw/news/?category=speech"
 dash = "------------------------------------------------"
 
 def catch(now):
+        
+    # getlink
+        link = now.find(id="example")
+        link = link.get("value")
+
+    # get info
         main = now.find("table")
         text = main.get_text(strip=True)
     #print(text)
@@ -35,7 +41,7 @@ def catch(now):
         place = info[6].split("值日生")[0]
 
         # 格式化輸出
-        ith_output = f"Date     : {date}\nTime     : {time}\nSpeaker  : {speaker}\nAffiliation : {affiliation}\nTopic    : {topic}\nPlace    : {place}\n" + dash + "\n"
+        ith_output = f"Link     : {link}\nDate     : {date}\nTime     : {time}\nSpeaker  : {speaker}\nAffiliation : {affiliation}\nTopic    : {topic}\nPlace    : {place}\n" + dash + "\n"
         return ith_output
 
 def getspeech():
@@ -55,13 +61,13 @@ def getspeech():
         link = i.select_one(".post-image")
         link = link.select_one("a").get("href")
         title.append(link)
-        link = url_news +  link + "/"
+        link = url_news + link + "/"
         posts.append(link)
 
 
     reply_speech = ""
     for i in range(0, len(posts)):
-        reply_speech += title[i] + "\nLink     :" + posts[i] + "\n"
+        reply_speech += title[i] + "\n"
         speech = requests.get(posts[i])
         soup2 = bs(speech.text, "html.parser")
         reply_speech += catch(soup2)
