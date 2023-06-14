@@ -61,7 +61,7 @@ def getspeech():
 
     reply_speech = ""
     for i in range(0, len(posts)):
-        print(title[i], "\nLink     :", posts[i])
+        reply_speech += title[i] + "\nLink     :" + posts[i] + "\n"
         speech = requests.get(posts[i])
         soup2 = bs(speech.text, "html.parser")
         reply_speech += catch(soup2)
