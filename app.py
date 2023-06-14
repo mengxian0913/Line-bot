@@ -103,7 +103,7 @@ def handle_message(event):
 
     now_event = 0
     for i in range(0, len(keywords)):
-        for word in i:
+        for word in keywords[i]:
             if text == word:
              now_event = i
              break
