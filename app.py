@@ -128,6 +128,9 @@ def DETECT_NEWS():
                         group_id,
                         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
                     )
+                line_bot_api.broadcast(
+                    TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                )
         except:
             break
             
