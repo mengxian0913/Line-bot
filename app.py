@@ -3,6 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import time
+import threading
 
 # Linebot setting
 
@@ -109,18 +110,23 @@ def Get_News():
     output = f"Title:   {post_title}\nLink:   {post_link}\nDate:   {post_date[1] + '/' + post_date[0]}\n"
     return output
 
-while True:
-    try:
-        CURRENT_NEWS = Get_News()
-        if IECS_NEWS != CURRENT_NEWS:
-            IECS_NEWS = CURRENT_NEWS
-            line_bot_api.broadcast(
-                TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-            )
-    except:
-        break
-    
-    time.sleep(3600)
+
+def DETECT_NEWS():
+    while True:
+        try:
+            CURRENT_NEWS = Get_News()
+            if IECS_NEWS != CURRENT_NEWS:
+                IECS_NEWS = CURRENT_NEWS
+                line_bot_api.broadcast(
+                    TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                )
+        except:
+            break
+
+        time.sleep(3600)
+
+thread = threading.Thread(target=DETECT_NEWS)
+thread.start()
 
 
 # All of the function
