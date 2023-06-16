@@ -4,6 +4,14 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import time
 
+# Linebot setting
+
+app = Flask(__name__)
+Channel_Secret = "75e8dc7494a50b1a0c7b5c59abaf799b"
+Channel_AccessToken = "0vEVSYhpMI9ZY4Lp9JwaJ1x9FhnNn2jkTNypCXZlbQcK/8bMes5sWrLIjove5CnWKls8IxAitL7UhnsexrArSTKJUyEFeC7d4pF3FRPi04clSZ2uYsyw2+4ido5TxfWB0ZoHwSSNa3PkJFwrR7ByYwdB04t89/1O/w1cDnyilFU="
+line_bot_api = LineBotApi(Channel_AccessToken)
+handler = WebhookHandler(Channel_Secret)
+
 # nonfunction
 
 def nonfunction():
@@ -75,17 +83,50 @@ def getspeech():
     return reply_speech
 
 
+# ALL NEWS ABOUT IECS
+
+IECS_NEWS_URL = "https://www.iecs.fcu.edu.tw/news/"
+FCU_URL = "https://www.iecs.fcu.edu.tw"
+
+IECS_NEWS = ""
+FIRST_SEARCH = 1
+
+def Get_News():
+
+    response = requests.get(IECS_NEWS_URL)
+    soup = bs(response.text, "html.parser")
+    post = soup.find(class_="post")
+
+    post_title = post.find("a")
+    post_title = post_title.get("href")
+    # post_image = post.find_all("img")
+    # post_image = FCU_URL + post_image[1].get("src")
+    post_date = post.find("span", class_="day")
+    post_month = post.find("span", class_="month")
+    post_date = [post_date.text, post_month.text]
+    post_link = IECS_NEWS_URL + post_title
+
+    output = f"Title:   {post_title}\nLink:   {post_link}\nDate:   {post_date[1] + '/' + post_date[0]}\n"
+    return output
+
+while True:
+    try:
+        CURRENT_NEWS = Get_News()
+        if IECS_NEWS != CURRENT_NEWS:
+            IECS_NEWS = CURRENT_NEWS
+            line_bot_api.broadcast(
+                TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+            )
+    except:
+        break
+    
+    time.sleep(3600)
+
+
 # All of the function
 function_list = [nonfunction, getspeech]
 
-
 # linebot app
-
-app = Flask(__name__)
-Channel_Secret = "75e8dc7494a50b1a0c7b5c59abaf799b"
-Channel_AccessToken = "0vEVSYhpMI9ZY4Lp9JwaJ1x9FhnNn2jkTNypCXZlbQcK/8bMes5sWrLIjove5CnWKls8IxAitL7UhnsexrArSTKJUyEFeC7d4pF3FRPi04clSZ2uYsyw2+4ido5TxfWB0ZoHwSSNa3PkJFwrR7ByYwdB04t89/1O/w1cDnyilFU="
-line_bot_api = LineBotApi(Channel_AccessToken)
-handler = WebhookHandler(Channel_Secret)
 
 @app.route("/", methods=['GET'])
 def home():
