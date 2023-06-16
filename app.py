@@ -88,8 +88,6 @@ def getspeech():
 
 IECS_NEWS_URL = "https://www.iecs.fcu.edu.tw/news/"
 FCU_URL = "https://www.iecs.fcu.edu.tw"
-
-IECS_NEWS = ""
 FIRST_SEARCH = 1
 
 def Get_News():
@@ -110,8 +108,9 @@ def Get_News():
     output = f"Title:   {post_title}\nLink:   {post_link}\nDate:   {post_date[1] + '/' + post_date[0]}\n"
     return output
 
-
+IECS_NEWS = ""
 def DETECT_NEWS():
+    global IECS_NEWS
     while True:
         try:
             CURRENT_NEWS = Get_News()
@@ -122,7 +121,7 @@ def DETECT_NEWS():
                 )
         except:
             break
-
+            
         time.sleep(3600)
 
 thread = threading.Thread(target=DETECT_NEWS)
