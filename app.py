@@ -1,7 +1,7 @@
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, JoinEvent
 import time
 import threading
 
@@ -12,7 +12,8 @@ Channel_Secret = "75e8dc7494a50b1a0c7b5c59abaf799b"
 Channel_AccessToken = "0vEVSYhpMI9ZY4Lp9JwaJ1x9FhnNn2jkTNypCXZlbQcK/8bMes5sWrLIjove5CnWKls8IxAitL7UhnsexrArSTKJUyEFeC7d4pF3FRPi04clSZ2uYsyw2+4ido5TxfWB0ZoHwSSNa3PkJFwrR7ByYwdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
-friend_ids = line_bot_api.get_all_rich_menu_ids()
+friend_list = []
+group_list = []
 
 # nonfunction
 
@@ -117,9 +118,14 @@ def DETECT_NEWS():
             CURRENT_NEWS = Get_News()
             if IECS_NEWS != CURRENT_NEWS:
                 IECS_NEWS = CURRENT_NEWS
-                for friend_id in friend_ids:
+                for friend_id in friend_list:
                     line_bot_api.push_message(
                         friend_id,
+                        TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                    )
+                for group_id in group_list:
+                    line_bot_api.push_message(
+                        group_id,
                         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
                     )
         except:
@@ -139,6 +145,20 @@ function_list = [nonfunction, getspeech]
 @app.route("/", methods=['GET'])
 def home():
     return "Hello, World!"
+
+@handler.add(JoinEvent)
+def handle_member_join(event):
+    if event.joined:
+        group_id = event.source.group_id
+        group_list.append(group_id)
+        # 使用 group_id 进行后续处理
+
+@handler.add(FollowEvent)
+def handle_member_follow(event):
+    if event.joined:
+        friend_id = event.source.group_id
+        friend_list.append(friend_id)
+        # 使用 friend_id 进行后续处理
 
 @app.route("/callback", methods=['POST'])
 def callback():
