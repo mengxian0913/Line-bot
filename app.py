@@ -156,7 +156,7 @@ def handle_member_join(event):
 @handler.add(FollowEvent)
 def handle_member_follow(event):
     if event.joined:
-        friend_id = event.source.group_id
+        friend_id = event.source.user_id
         friend_list.append(friend_id)
         # 使用 friend_id 进行后续处理
 
