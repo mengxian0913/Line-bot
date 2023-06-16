@@ -12,6 +12,7 @@ Channel_Secret = "75e8dc7494a50b1a0c7b5c59abaf799b"
 Channel_AccessToken = "0vEVSYhpMI9ZY4Lp9JwaJ1x9FhnNn2jkTNypCXZlbQcK/8bMes5sWrLIjove5CnWKls8IxAitL7UhnsexrArSTKJUyEFeC7d4pF3FRPi04clSZ2uYsyw2+4ido5TxfWB0ZoHwSSNa3PkJFwrR7ByYwdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
+friend_ids = line_bot_api.get_all_rich_menu_ids()
 
 # nonfunction
 
@@ -116,9 +117,11 @@ def DETECT_NEWS():
             CURRENT_NEWS = Get_News()
             if IECS_NEWS != CURRENT_NEWS:
                 IECS_NEWS = CURRENT_NEWS
-                line_bot_api.broadcast(
-                    TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                )
+                for friend_id in friend_ids:
+                    line_bot_api.push_message(
+                        friend_id,
+                        TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                    )
         except:
             break
             
