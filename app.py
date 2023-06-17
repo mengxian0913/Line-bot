@@ -60,7 +60,6 @@ def getspeech():
     response = requests.get(url)
     soup = bs(response.text, "html.parser")
 
-
     post = soup.find_all(class_="post", limit=10)
 
     url_news = "https://www.iecs.fcu.edu.tw/news/"
@@ -111,30 +110,35 @@ def Get_News():
     return output
 
 IECS_NEWS = ""
+# lock = threading.Lock()
+
 def DETECT_NEWS():
     global IECS_NEWS
     while True:
         try:
+            line_bot_api.broadcast(
+                    TextSendMessage(text=len(group_list))
+                )
             CURRENT_NEWS = Get_News()
             if IECS_NEWS != CURRENT_NEWS:
                 IECS_NEWS = CURRENT_NEWS
-                for friend_id in friend_list:
-                    line_bot_api.push_message(
-                        friend_id,
-                        TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                    )
-                for group_id in group_list:
-                    line_bot_api.push_message(
-                        group_id,
-                        TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                    )
+                # for friend_id in friend_list:
+                #     line_bot_api.push_message(
+                #         friend_id,
+                #         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                #     )
+                # for group_id in group_list:
+                #     line_bot_api.push_message(
+                #         group_id,
+                #         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
+                #     )
                 line_bot_api.broadcast(
                     TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
                 )
         except:
             break
             
-        time.sleep(3600)
+        time.sleep(5)
 
 thread = threading.Thread(target=DETECT_NEWS)
 thread.start()
@@ -151,15 +155,22 @@ def home():
 
 @handler.add(JoinEvent)
 def handle_member_join(event):
-    if event.joined:
+    if event.source.type == 'group':
         group_id = event.source.group_id
         group_list.append(group_id)
-        # 使用 group_id 进行后续处理
+    elif event.source.type == 'user':
+        friend_id = event.source.user_id
+        friend_list.append(friend_id)
 
 @handler.add(FollowEvent)
 def handle_member_follow(event):
+    global friend_list
     if event.joined:
         friend_id = event.source.user_id
+        line_bot_api.push_message(
+            friend_id,
+            TextSendMessage(text="Hello" + friend_id)
+        )
         friend_list.append(friend_id)
         # 使用 friend_id 进行后续处理
 
@@ -177,8 +188,8 @@ def callback():
 keywords = [["."], ["演講", "speech"]]
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    print("OUOb\n")
     text = event.message.text.lower()
-
     now_event = 0
     for i in range(0, len(keywords)):
         for word in keywords[i]:
@@ -196,6 +207,7 @@ def handle_message(event):
     )
 
 if __name__ == "__main__":
+    app.debug = True
     app.run()
 
 
