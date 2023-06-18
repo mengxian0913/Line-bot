@@ -4,22 +4,31 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, JoinEvent
 import time
 import threading
+from celery import Celery
+from copy import deepcopy
+output_lock = threading.Lock()
 
 # Linebot setting
 
 app = Flask(__name__)
-Channel_Secret = "75e8dc7494a50b1a0c7b5c59abaf799b"
-Channel_AccessToken = "0vEVSYhpMI9ZY4Lp9JwaJ1x9FhnNn2jkTNypCXZlbQcK/8bMes5sWrLIjove5CnWKls8IxAitL7UhnsexrArSTKJUyEFeC7d4pF3FRPi04clSZ2uYsyw2+4ido5TxfWB0ZoHwSSNa3PkJFwrR7ByYwdB04t89/1O/w1cDnyilFU="
+Channel_Secret = "8756120038fb41f4bc31560297cd1e9e"
+Channel_AccessToken = "PU/J/S/o1mpxHkQS0fFJjwtutZGC6bZaoSZL7tsvNyzVdGMkJr+Ie4+uZeONsLO5nydcRcTKD0hALsBtdzOvnXqlRk/jBZclSiMyqZefDG2qtWa2utpPXXR7g1gab4eW9gQaAJ9x1A9s6naH+VO+9QdB04t89/1O/w1cDnyilFU="
+
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
-friend_list = []
+friend_list = ["f22e1f29a5914bf5899bbff1f81431fb"]
 group_list = []
+reply_text = ""
+
+##############################################################################
 
 # nonfunction
 
-def nonfunction():
-    return "meow"
+def nonfunction(token):
+    sentmessege(token, "meow")
+    return
 
+##############################################################################
 
 # SPEECH NWES BOT
 
@@ -31,31 +40,31 @@ dash = "------------------------------------------------"
 def catch(now):
         
     # getlink
-        link = now.find(id="example")
-        link = link.get("value")
+            link = now.find(id="example")
+            link = link.get("value")
 
-    # get info
-        main = now.find("table")
-        text = main.get_text(strip=True)
-    #print(text)
+        # get info
+            main = now.find("table")
+            text = main.get_text(strip=True)
+        #print(text)
 
-        # 解析演講資訊
-        info = text.split("：")
+            # 解析演講資訊
+            info = text.split("：")
 
-    #print(info)
+        #print(info)
 
-        date = info[1].split("演講時間")[0]
-        time = info[2].split("演講者")[0]
-        speaker = info[3].split("服務單位")[0]
-        affiliation = info[4].split("演講題目")[0]
-        topic = info[5].split("演講地點")[0]
-        place = info[6].split("值日生")[0]
+            date = info[1].split("演講時間")[0]
+            time = info[2].split("演講者")[0]
+            speaker = info[3].split("服務單位")[0]
+            affiliation = info[4].split("演講題目")[0]
+            topic = info[5].split("演講地點")[0]
+            place = info[6].split("值日生")[0]
 
-        # 格式化輸出
-        ith_output = f"Link     : {link}\nDate     : {date}\nTime     : {time}\nSpeaker  : {speaker}\nAffiliation : {affiliation}\nTopic    : {topic}\nPlace    : {place}\n" + dash + "\n"
-        return ith_output
+            # 格式化輸出
+            ith_output = f"Link     : {link}\nDate     : {date}\nTime     : {time}\nSpeaker  : {speaker}\nAffiliation : {affiliation}\nTopic    : {topic}\nPlace    : {place}\n" + dash + "\n"
+            return ith_output
 
-def getspeech():
+def getspeech(reply_token_copy):
 
     response = requests.get(url)
     soup = bs(response.text, "html.parser")
@@ -81,9 +90,11 @@ def getspeech():
         speech = requests.get(posts[i])
         soup2 = bs(speech.text, "html.parser")
         reply_speech += catch(soup2)
+        
+    sentmessege(reply_token_copy, reply_speech)
+    return
 
-    return reply_speech
-
+##############################################################################
 
 # ALL NEWS ABOUT IECS
 
@@ -109,73 +120,89 @@ def Get_News():
     output = f"Title:   {post_title}\nLink:   {post_link}\nDate:   {post_date[1] + '/' + post_date[0]}\n"
     return output
 
+##############################################################################
+
+# Codeforces contest
+
+CODEFORCES_URL = "https://codeforces.com"
+CODEFORCES_CONTEST_URL = "https://codeforces.com/contests"
+
+def CODEFORCES_CONTEST():
+
+    response = requests.get(CODEFORCES_CONTEST_URL)
+    soup = bs(response.text, "html.parser")
+    contest = soup.select_one("tr[data-contestid]")
+    contest_info = contest.find_all("td")
+    contest_title = contest_info[0].get_text(strip=True)
+    contest_start_time = contest_info[2].get_text(strip=True)
+    contest_length = contest_info[3].get_text(strip=True)
+    contest_register = contest_info[5].find("a")
+    contest_register = CODEFORCES_URL + contest_register.get("href")
+    output = f"**{contest_title}**\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n"
+    return output
+
+##############################################################################
+
 IECS_NEWS = ""
-# lock = threading.Lock()
+CODEFORCES_CONTEST_NEWS = ""
+DETECT_START = 0
 
 def DETECT_NEWS():
     global IECS_NEWS
+    global CODEFORCES_CONTEST_NEWS
+
     while True:
         try:
-            line_bot_api.broadcast(
-                    TextSendMessage(text=len(group_list))
-                )
             CURRENT_NEWS = Get_News()
+            print(CURRENT_NEWS)
             if IECS_NEWS != CURRENT_NEWS:
                 IECS_NEWS = CURRENT_NEWS
-                # for friend_id in friend_list:
-                #     line_bot_api.push_message(
-                #         friend_id,
-                #         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                #     )
-                # for group_id in group_list:
-                #     line_bot_api.push_message(
-                #         group_id,
-                #         TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                #     )
                 line_bot_api.broadcast(
                     TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
                 )
+
+            CURRENT_NEWS = CODEFORCES_CONTEST()
+            print(CURRENT_NEWS)
+            if CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
+                CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
+                line_bot_api.broadcast(
+                    TextSendMessage(text="@Vincent Codeforces!!\n"+CODEFORCES_CONTEST_NEWS)
+                )
+
         except:
             break
             
-        time.sleep(5)
+        time.sleep(3600)
+    return
 
-thread = threading.Thread(target=DETECT_NEWS)
-thread.start()
-
+DETECT = threading.Thread(target=DETECT_NEWS)
+#######################################################
 
 # All of the function
 function_list = [nonfunction, getspeech]
 
 # linebot app
 
+def sentmessege(token, messege):
+    line_bot_api.reply_message(
+        token,
+        TextSendMessage(text=messege)
+    )
+    return
+
 @app.route("/", methods=['GET'])
 def home():
     return "Hello, World!"
 
-@handler.add(JoinEvent)
-def handle_member_join(event):
-    if event.source.type == 'group':
-        group_id = event.source.group_id
-        group_list.append(group_id)
-    elif event.source.type == 'user':
-        friend_id = event.source.user_id
-        friend_list.append(friend_id)
-
-@handler.add(FollowEvent)
-def handle_member_follow(event):
-    global friend_list
-    if event.joined:
-        friend_id = event.source.user_id
-        line_bot_api.push_message(
-            friend_id,
-            TextSendMessage(text="Hello" + friend_id)
-        )
-        friend_list.append(friend_id)
-        # 使用 friend_id 进行后续处理
 
 @app.route("/callback", methods=['POST'])
 def callback():
+    global DETECT_START
+
+    if DETECT_START == 0:
+        DETECT.start()
+        DETECT_START = 1
+
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
     try:
@@ -188,9 +215,10 @@ def callback():
 keywords = [["."], ["演講", "speech"]]
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print("OUOb\n")
     text = event.message.text.lower()
     now_event = 0
+    reply_token_copy = (event.reply_token)
+
     for i in range(0, len(keywords)):
         for word in keywords[i]:
             if text == word:
@@ -199,16 +227,15 @@ def handle_message(event):
         if now_event != 0:
             break
 
-    
-    reply_text = function_list[now_event]()
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=reply_text)
-    )
+    crawler_thread = threading.Thread(target=function_list[now_event], args=(reply_token_copy,))
+    crawler_thread.start()
+
+    return
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run(port=5001)
+
 
 
 
