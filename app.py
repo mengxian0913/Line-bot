@@ -10,7 +10,6 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, JoinEvent
 import time
 import threading
-from celery import Celery
 from copy import deepcopy
 
 
