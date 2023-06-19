@@ -152,7 +152,7 @@ def CODEFORCES_CONTEST():
 Ask_to_register = 0
 def REGISTER_CODEFORCES_CONTEST(reply_token_copy):
     Chromeoptions = Options()
-    # Chromeoptions.add_argument('--headless')
+    Chromeoptions.add_argument('--headless')
     s = Service('./chromedriver')
     driver = webdriver.Chrome(service=s, options=Chromeoptions)
 
