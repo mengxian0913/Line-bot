@@ -218,7 +218,8 @@ def handle_message(event):
     text = event.message.text.lower()
     now_event = 0
     reply_token_copy = (event.reply_token)
-
+    user_id = event.source.user_id
+    print(user_id)
     for i in range(0, len(keywords)):
         for word in keywords[i]:
             if text == word:
