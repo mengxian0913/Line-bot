@@ -1,3 +1,9 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -6,7 +12,8 @@ import time
 import threading
 from celery import Celery
 from copy import deepcopy
-output_lock = threading.Lock()
+
+
 
 # Linebot setting
 
@@ -126,9 +133,9 @@ def Get_News():
 
 CODEFORCES_URL = "https://codeforces.com"
 CODEFORCES_CONTEST_URL = "https://codeforces.com/contests"
-
+CODEFORCES_CONTEST_REGISTER_URL = ""
 def CODEFORCES_CONTEST():
-
+    global CODEFORCES_CONTEST_REGISTER_URL
     response = requests.get(CODEFORCES_CONTEST_URL)
     soup = bs(response.text, "html.parser")
     contest = soup.select_one("tr[data-contestid]")
@@ -137,11 +144,64 @@ def CODEFORCES_CONTEST():
     contest_start_time = contest_info[2].get_text(strip=True)
     contest_length = contest_info[3].get_text(strip=True)
     contest_register = contest_info[5].find("a")
-    contest_register = CODEFORCES_URL + contest_register.get("href")
+    CODEFORCES_CONTEST_REGISTER_URL = contest_register = CODEFORCES_URL + contest_register.get("href")
     output = f"**{contest_title}**\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n"
     return output
 
 ##############################################################################
+# AUTO_REGISTER_CODEFORCES_CONTEST
+Ask_to_register = 0
+def REGISTER_CODEFORCES_CONTEST(reply_token_copy):
+    Chromeoptions = Options()
+    # Chromeoptions.add_argument('--headless')
+    s = Service('./chromedriver')
+    driver = webdriver.Chrome(service=s, options=Chromeoptions)
+
+    YOURACOUNT = "exo930122@gmail.com"
+    YOURPASSWORD = "vincent09132362"
+
+    driver.get(CODEFORCES_CONTEST_REGISTER_URL)
+
+    # Sign in account
+    account_box = driver.find_element(By.XPATH, "//input[@id='handleOrEmail']")
+    password_box = driver.find_element(By.XPATH, "//input[@id='password']")
+    login_button = driver.find_element(By.XPATH, "//input[@value='Login']")
+
+    account_box.send_keys(YOURACOUNT)
+    password_box.send_keys(YOURPASSWORD)
+    login_button.click()
+
+    def find_register_button():
+        try:
+            button = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, "//input[@value='Register']"))
+            )
+            return button
+
+        except:
+            return -1
+
+    Register_button = find_register_button()
+
+    if type(Register_button) != int:
+        Register_button.click()
+        driver.close()
+        line_bot_api.reply_message(
+            reply_token_copy,
+            TextSendMessage(text="Successful Register")
+        )
+
+    else: 
+        line_bot_api.reply_message(
+            reply_token_copy,
+            TextSendMessage(text="Register Alreadey")
+        )
+
+    return
+
+
+##############################################################################
+# AUTO_DETECT
 
 IECS_NEWS = ""
 CODEFORCES_CONTEST_NEWS = ""
@@ -150,6 +210,7 @@ DETECT_START = 0
 def DETECT_NEWS():
     global IECS_NEWS
     global CODEFORCES_CONTEST_NEWS
+    global Ask_to_register
 
     while True:
         try:
@@ -164,6 +225,7 @@ def DETECT_NEWS():
             CURRENT_NEWS = CODEFORCES_CONTEST()
             print(CURRENT_NEWS)
             if CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
+                Ask_to_register = 1
                 CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
                 line_bot_api.broadcast(
                     TextSendMessage(text="@Vincent Codeforces!!\n"+CODEFORCES_CONTEST_NEWS)
@@ -215,11 +277,20 @@ def callback():
 keywords = [["."], ["演講", "speech"]]
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    text = event.message.text.lower()
-    now_event = 0
+    global Ask_to_register
+
     reply_token_copy = (event.reply_token)
-    user_id = event.source.user_id
-    print(user_id)
+    text = event.message.text.lower()
+
+    if Ask_to_register == 1:
+        Ask_to_register = 0
+        if text == '1' or text == 'yes':
+            print("go to register")
+            crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy,))
+            crawler_thread.start()
+            return
+        
+    now_event = 0
     for i in range(0, len(keywords)):
         for word in keywords[i]:
             if text == word:
