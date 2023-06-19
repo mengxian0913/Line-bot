@@ -215,7 +215,7 @@ def DETECT_NEWS():
     while True:
         try:
             CURRENT_NEWS = Get_News()
-            print(CURRENT_NEWS)
+            # print(CURRENT_NEWS)
             if IECS_NEWS != CURRENT_NEWS:
                 IECS_NEWS = CURRENT_NEWS
                 line_bot_api.broadcast(
@@ -223,7 +223,7 @@ def DETECT_NEWS():
                 )
 
             CURRENT_NEWS = CODEFORCES_CONTEST()
-            print(CURRENT_NEWS)
+            # print(CURRENT_NEWS)
             if CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
                 Ask_to_register = 1
                 CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
@@ -285,7 +285,7 @@ def handle_message(event):
     if Ask_to_register == 1:
         Ask_to_register = 0
         if text == '1' or text == 'yes':
-            print("go to register")
+            # print("go to register")
             crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy,))
             crawler_thread.start()
             return
