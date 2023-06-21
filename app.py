@@ -94,14 +94,14 @@ def handle_message(event):
     if Users.get(current_user_id) == None:
         form_url = request.host_url + 'form'
         messege = f"請填寫個人信息啟動 meowmeow bot!:    {form_url}"
-        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.你的個資小心保管!!)")
+        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
         line_bot_api.push_message(current_user_id, TextSendMessage(text=current_user_id))
         return
     
     elif Users[current_user_id].user_name == None:
         form_url = request.host_url + 'form'
         messege = f"請填寫個人信息啟動 meowmeow bot!:    {form_url}"
-        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.你的個資小心保管!!)")
+        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
         line_bot_api.push_message(current_user_id, TextSendMessage(text=current_user_id))
         return
 
@@ -135,9 +135,9 @@ def handle_follow(event):
     global form_url
     form_url = request.host_url + 'form'
     user_id = event.source.user_id
-    Users[user_id] = User(None, None, None, None, None, None)
+    Users[user_id] = User(None, None, None, None, None, None, None)
     message = "歡迎加入Meowmeow Line Bot！請填寫表單提供信息完成設定！"
-    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form_url + "\n 底下是你的 user id! \n(p.s.你的個資小心保管!!)"))
+    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form_url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
     line_bot_api.push_message(user_id, TextSendMessage(text=user_id))
     return "please setting the required information to start the function!"
 

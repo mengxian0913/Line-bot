@@ -42,7 +42,7 @@ def DETECT_NEWS():
             CURRENT_NEWS = Get_News()
             if DETECT_OBJECTS.IECS_NEWS != CURRENT_NEWS:
                 DETECT_OBJECTS.IECS_NEWS = CURRENT_NEWS
-                MESSEGE = "資訊系新消息!!\n"+ DETECT_OBJECTS.IECS_NEWS
+                MESSEGE = DETECT_OBJECTS.IECS_NEWS = "資訊系新消息!!\n"+ DETECT_OBJECTS.IECS_NEWS
                 for i in Users:
                     line_bot_api.push_message(
                         i.user_id,
@@ -53,7 +53,7 @@ def DETECT_NEWS():
             if DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
                 CODEFORCES_CLASS.ASK_STATE = 1
                 DETECT_CLASS.CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
-                MESSEGE = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
+                MESSEGE = DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
                 for i in Users:
                     line_bot_api.push_message(
                         i.user_id,
