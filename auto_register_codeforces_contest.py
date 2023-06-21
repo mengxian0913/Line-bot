@@ -17,15 +17,12 @@ from linebot.models import (
 
 # AUTO_REGISTER_CODEFORCES_CONTEST
 
-def REGISTER_CODEFORCES_CONTEST(reply_token_copy):
+def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD):
     print("CODEFORCES_CONTEST_REGISTER_URL", CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL)
     Chromeoptions = Options()
     Chromeoptions.add_argument('--headless')
     s = Service('./chromedriver')
     driver = webdriver.Chrome(service=s, options=Chromeoptions)
-
-    YOURACOUNT = "exo930122@gmail.com"
-    YOURPASSWORD = "vincent09132362"
 
     driver.get(CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL)
 
@@ -34,8 +31,8 @@ def REGISTER_CODEFORCES_CONTEST(reply_token_copy):
     password_box = driver.find_element(By.XPATH, "//input[@id='password']")
     login_button = driver.find_element(By.XPATH, "//input[@value='Login']")
 
-    account_box.send_keys(YOURACOUNT)
-    password_box.send_keys(YOURPASSWORD)
+    account_box.send_keys(ACCOUNT)
+    password_box.send_keys(PASSWORD)
     login_button.click()
 
     def find_register_button():
@@ -55,13 +52,13 @@ def REGISTER_CODEFORCES_CONTEST(reply_token_copy):
         driver.close()
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Successful Register")
+            TextSendMessage(text="Successful Registered")
         )
 
     else: 
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Register Alreadey")
+            TextSendMessage(text="Registered Alreadey")
         )
 
     return

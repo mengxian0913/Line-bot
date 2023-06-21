@@ -1,3 +1,4 @@
+from setting import *
 from config import line_bot_api, handler
 from linebot import (
     LineBotApi,
@@ -21,39 +22,43 @@ from bs4 import BeautifulSoup as bs
 
 
 # AUTO_DETECT
-IECS_NEWS = ""
-CODEFORCES_CONTEST_NEWS = ""
-DETECT_START = 0
-
 class CODEFORCES_CONTEST_CLASS:
     ASK_STATE = 0
     CODEFORCES_CONTEST_REGISTER_URL = ""
 
+class DETECT_CLASS:
+    IECS_NEWS = ""
+    CODEFORCES_CONTEST_NEWS = ""
+
 CODEFORCES_CLASS = CODEFORCES_CONTEST_CLASS()
+DETECT_OBJECTS = DETECT_CLASS()
 
 def DETECT_NEWS():
-    global IECS_NEWS
-    global CODEFORCES_CONTEST_NEWS
     global CODEFORCES_CLASS
+    global DETECT_OBJECTS
 
     while True:
         try:
             CURRENT_NEWS = Get_News()
-            # print(CURRENT_NEWS)
-            if IECS_NEWS != CURRENT_NEWS:
-                IECS_NEWS = CURRENT_NEWS
-                line_bot_api.broadcast(
-                    TextSendMessage(text="@Vincent 資訊系新消息!!\n"+IECS_NEWS)
-                )
+            if DETECT_OBJECTS.IECS_NEWS != CURRENT_NEWS:
+                DETECT_OBJECTS.IECS_NEWS = CURRENT_NEWS
+                MESSEGE = "資訊系新消息!!\n"+ DETECT_OBJECTS.IECS_NEWS
+                for i in Users:
+                    line_bot_api.push_message(
+                        i.user_id,
+                        TextSendMessage(text=MESSEGE)
+                    )
 
             CURRENT_NEWS = CODEFORCES_CONTEST()
-            # print(CURRENT_NEWS)
-            if CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
+            if DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
                 CODEFORCES_CLASS.ASK_STATE = 1
-                CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
-                line_bot_api.broadcast(
-                    TextSendMessage(text="@Vincent Codeforces!!\n"+CODEFORCES_CONTEST_NEWS)
-                )
+                DETECT_CLASS.CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
+                MESSEGE = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
+                for i in Users:
+                    line_bot_api.push_message(
+                        i.user_id,
+                        TextSendMessage(text=MESSEGE)
+                    )
 
         except:
             break
@@ -104,7 +109,7 @@ def CODEFORCES_CONTEST():
     contest_length = contest_info[3].get_text(strip=True)
     contest_register = contest_info[5].find("a")
     CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL = contest_register = CODEFORCES_URL + contest_register.get("href")
-    output = f"**{contest_title}**\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n"
+    output = f"{contest_title}\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n"
     return output
 
 ##############################################################################
