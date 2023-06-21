@@ -109,7 +109,7 @@ def CODEFORCES_CONTEST():
     contest_length = contest_info[3].get_text(strip=True)
     contest_register = contest_info[5].find("a")
     CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL = contest_register = CODEFORCES_URL + contest_register.get("href")
-    output = f"{contest_title}\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n"
+    output = f"{contest_title}\nStart time:   {contest_start_time}\nLength:   {contest_length}\nregister   {contest_register}\n" + "自動註冊請傳 1 或 Yes"
     return output
 
 ##############################################################################

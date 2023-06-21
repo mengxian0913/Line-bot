@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap');
+
+$bg-color: rgba(2, 15, 19, 0.814);
+
+html{
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    border: none;
+}
+
+:root    
+{
+    overflow-x: hidden;
+    background-color: $bg-color;
+    color: #FFF;
+}
+
+body{
+    min-height: 100vh;
+}
+
+
+@mixin bgsetting($width, $height, $bg, $att, $rep, $size){
+    width: $width;
+    height: $height;
+    background: $bg;
+    background-size: $size;
+    background-attachment: $att;
+    background-repeat: $rep;
+}
+
+.head{
+    height: 50px;
+    width: 100%;
+    h1{
+        width: fit-content;
+        height: auto;
+        margin: auto;
+        padding-top: 10px;
+    }
+}
+
+form{
+    min-height: fit-content;
+    height: 80vh;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 30px;
+    margin: 15px auto;
+    border-radius: 5px;
+    
+    background: rgba(100, 89, 95, 0.3);  
+    backdrop-filter: blur(0.5px);
+
+    .problem{
+        margin: 30px 0 0 0;
+        #input{
+            height: 25px;
+            border-radius: 10px;
+        }
+    }
+
+    #submit{
+        cursor: pointer;
+        font-size: 20px;
+        padding: 10px 15px;
+        border-radius: 15px;
+    }
+}

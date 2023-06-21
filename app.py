@@ -62,8 +62,6 @@ function_list = [meow, getspeech]
 # linebot app
 #######################################################
 
-form_url = "" # form for information
-
 @app.route("/", methods=['GET'])
 def home():
     return "Hello, World!"
