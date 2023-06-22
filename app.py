@@ -6,6 +6,7 @@ from codeforces_contest import *
 from auto_register_codeforces_contest import *
 from speech import *
 from meow import *
+from quick_message import *
 
 from flask import (
     Flask,
@@ -48,13 +49,6 @@ DETECT_START = 0
 
 # All of the function
 function_list = [meow, getspeech, CODEFORCES_CURRENT_CONTEST]
-
-keywords = [
-    ["."],
-    ["演講", "speech"],
-    ['codeforces contest', 'cf', 'cf contest']
-]
-
 # linebot app
 #######################################################
 
@@ -166,7 +160,7 @@ def submit():
         TextSendMessage(text=DETECT_OBJECTS.IECS_NEWS)
     )
 
-    flex_message = TextSendMessage(text=DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS, quick_reply=QuickReply(auto_register_check))
+    flex_message = TextSendMessage(text=DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS, quick_reply=AUTO_RESIGTER_CHECK_BUTTON)
     line_bot_api.push_message(
         user_id,
         flex_message

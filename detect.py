@@ -1,4 +1,5 @@
 from setting import *
+from quick_message import *
 from config import line_bot_api, handler
 from linebot import (
     LineBotApi,
@@ -15,10 +16,7 @@ from flask import (
 import requests
 from bs4 import BeautifulSoup as bs
 
-auto_register_check = [
-    QuickReplyButton(action=MessageAction(label='Yes', text='Yes')),
-    QuickReplyButton(action=MessageAction(label='No', text='No'))
-]
+from quick_message import AUTO_RESIGTER_CHECK_BUTTON
 
 
 # AUTO_DETECT
@@ -45,8 +43,8 @@ def DETECT_NEWS():
                 MESSEGE = DETECT_OBJECTS.IECS_NEWS = "資訊系新消息!!\n"+ DETECT_OBJECTS.IECS_NEWS
                 for i in Users:
                     line_bot_api.push_message(
-                        i.user_id,
-                        TextSendMessage(text=MESSEGE)
+                        i,
+                        TextSendMessage(text=MESSEGE, quick_reply=QUICK_MESSAGE_BUTTON)
                     )
 
             CURRENT_NEWS = CODEFORCES_CONTEST()
@@ -55,7 +53,7 @@ def DETECT_NEWS():
                     Users[i].codeforces_register_state = 1
                 DETECT_CLASS.CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
                 MESSEGE = DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
-                flex_message = TextSendMessage(text=MESSEGE, quick_reply=QuickReply(auto_register_check))
+                flex_message = TextSendMessage(text=MESSEGE, quick_reply=AUTO_RESIGTER_CHECK_BUTTON)
                 for i in Users:
                     line_bot_api.push_message(
                         i.user_id,
