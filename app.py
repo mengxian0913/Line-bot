@@ -1,17 +1,11 @@
 from config import line_bot_api, handler
-
 from sent_messege import *
 from setting import *
 from detect import *
 from codeforces_contest import *
-
-from auto_register_codeforces_contest import (
-    REGISTER_CODEFORCES_CONTEST
-)
-
-
-from speech import getspeech
-from meow import meow
+from auto_register_codeforces_contest import *
+from speech import *
+from meow import *
 
 from flask import (
     Flask,
@@ -106,8 +100,8 @@ def handle_message(event):
         line_bot_api.push_message(current_user_id, TextSendMessage(text=current_user_id))
         return
 
-    if CODEFORCES_CLASS.ASK_STATE == 1:
-        CODEFORCES_CLASS.ASK_STATE = 0
+    if Users[current_user_id].codeforces_register_state == 1:
+        Users[current_user_id].codeforces_register_state = 0
         if text == '1' or text == 'yes':
             print("go to register")
             crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy, Users[current_user_id].codeforces_handle, Users[current_user_id].codeforces_password))
@@ -122,6 +116,9 @@ def handle_message(event):
              break
         if now_event != 0:
             break
+    
+    if i == 2:
+        Users[current_user_id].codeforces_register_state = 1
 
     crawler_thread = threading.Thread(target=function_list[now_event], args=(reply_token_copy,))
     crawler_thread.start()
@@ -175,7 +172,7 @@ def submit():
         flex_message
     )
 
-    CODEFORCES_CLASS.ASK_STATE = 1
+    Users[user_id].codeforces_register_state = 1
 
     return "表單提交成功！"
 

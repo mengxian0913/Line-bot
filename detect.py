@@ -23,7 +23,6 @@ auto_register_check = [
 
 # AUTO_DETECT
 class CODEFORCES_CONTEST_CLASS:
-    ASK_STATE = 0
     CODEFORCES_CONTEST_REGISTER_URL = ""
 
 class DETECT_CLASS:
@@ -34,6 +33,7 @@ CODEFORCES_CLASS = CODEFORCES_CONTEST_CLASS()
 DETECT_OBJECTS = DETECT_CLASS()
 
 def DETECT_NEWS():
+    global Users
     global CODEFORCES_CLASS
     global DETECT_OBJECTS
 
@@ -51,7 +51,8 @@ def DETECT_NEWS():
 
             CURRENT_NEWS = CODEFORCES_CONTEST()
             if DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS != CURRENT_NEWS:
-                CODEFORCES_CLASS.ASK_STATE = 1
+                for i in Users:
+                    Users[i].codeforces_register_state = 1
                 DETECT_CLASS.CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
                 MESSEGE = DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
                 flex_message = TextSendMessage(text=MESSEGE, quick_reply=QuickReply(auto_register_check))
