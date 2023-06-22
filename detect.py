@@ -5,11 +5,7 @@ from linebot import (
     WebhookHandler
 )
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import (
-    MessageEvent,
-    TextMessage, 
-    TextSendMessage
-)
+from linebot.models import *
 import time
 from flask import (
     Flask,
@@ -19,6 +15,10 @@ from flask import (
 import requests
 from bs4 import BeautifulSoup as bs
 
+auto_register_check = [
+    QuickReplyButton(action=MessageAction(label='Yes', text='Yes')),
+    QuickReplyButton(action=MessageAction(label='No', text='No'))
+]
 
 
 # AUTO_DETECT
@@ -54,10 +54,11 @@ def DETECT_NEWS():
                 CODEFORCES_CLASS.ASK_STATE = 1
                 DETECT_CLASS.CODEFORCES_CONTEST_NEWS = CURRENT_NEWS
                 MESSEGE = DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS = "Codeforces News!!\n" + DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS
+                flex_message = TextSendMessage(text=MESSEGE, quick_reply=QuickReply(auto_register_check))
                 for i in Users:
                     line_bot_api.push_message(
                         i.user_id,
-                        TextSendMessage(text=MESSEGE)
+                        flex_message
                     )
 
         except:

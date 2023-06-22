@@ -2,16 +2,13 @@ from config import line_bot_api, handler
 
 from sent_messege import *
 from setting import *
-
-from detect import (
-    DETECT_NEWS,
-    CODEFORCES_CLASS,
-    DETECT_OBJECTS
-)
+from detect import *
+from codeforces_contest import *
 
 from auto_register_codeforces_contest import (
     REGISTER_CODEFORCES_CONTEST
 )
+
 
 from speech import getspeech
 from meow import meow
@@ -56,8 +53,13 @@ DETECT_START = 0
 #######################################################
 
 # All of the function
-function_list = [meow, getspeech]
+function_list = [meow, getspeech, CODEFORCES_CURRENT_CONTEST]
 
+keywords = [
+    ["."],
+    ["演講", "speech"],
+    ['codeforces contest', 'cf', 'cf contest']
+]
 
 # linebot app
 #######################################################
@@ -83,7 +85,6 @@ def callback():
     return 'OK'
 
 
-keywords = [["."], ["演講", "speech"]]
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     global CODEFORCES_CLASS, form_url
@@ -168,14 +169,15 @@ def submit():
         TextSendMessage(text=DETECT_OBJECTS.IECS_NEWS)
     )
 
+    flex_message = TextSendMessage(text=DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS, quick_reply=QuickReply(auto_register_check))
     line_bot_api.push_message(
         user_id,
-        TextSendMessage(text=DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS)
+        flex_message
     )
 
     CODEFORCES_CLASS.ASK_STATE = 1
 
-    return "表单提交成功！"
+    return "表單提交成功！"
 
 
 if __name__ == "__main__":
