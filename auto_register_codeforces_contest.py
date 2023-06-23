@@ -1,3 +1,4 @@
+from quick_message import *
 from detect import (
     CODEFORCES_CLASS
 )
@@ -18,13 +19,13 @@ from linebot.models import (
 # AUTO_REGISTER_CODEFORCES_CONTEST
 
 def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD):
-    print("CODEFORCES_CONTEST_REGISTER_URL", CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL)
+    print("CODEFORCES_CONTEST_REGISTER_URL", CODEFORCES_CLASS.CONTEST_REGISTER_URL)
     Chromeoptions = Options()
     Chromeoptions.add_argument('--headless')
     s = Service('./chromedriver')
     driver = webdriver.Chrome(service=s, options=Chromeoptions)
 
-    driver.get(CODEFORCES_CLASS.CODEFORCES_CONTEST_REGISTER_URL)
+    driver.get(CODEFORCES_CLASS.CONTEST_REGISTER_URL)
 
     # Sign in account
     account_box = driver.find_element(By.XPATH, "//input[@id='handleOrEmail']")
@@ -52,13 +53,13 @@ def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD):
         driver.close()
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Successful Registered")
+            TextSendMessage(text="Successful Registered", quick_reply=QUICK_MESSAGE_BUTTON)
         )
 
     else: 
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Registered Alreadey")
+            TextSendMessage(text="Registered Alreadey", quick_reply=QUICK_MESSAGE_BUTTON)
         )
 
     return

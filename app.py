@@ -1,12 +1,18 @@
 from config import line_bot_api, handler
 from sent_messege import *
 from setting import *
-from detect import *
 from codeforces_contest import *
 from auto_register_codeforces_contest import *
 from speech import *
 from meow import *
 from quick_message import *
+
+from detect import (
+    CODEFORCES_CLASS,
+    IECS_NEWS_CLASS,
+    DETECT_NEWS
+)
+
 
 from flask import (
     Flask,
@@ -96,7 +102,7 @@ def handle_message(event):
 
     if Users[current_user_id].codeforces_register_state == 1:
         Users[current_user_id].codeforces_register_state = 0
-        if text == '1' or text == 'yes':
+        if text == 'register':
             print("go to register")
             crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy, Users[current_user_id].codeforces_handle, Users[current_user_id].codeforces_password))
             crawler_thread.start()
@@ -155,15 +161,15 @@ def submit():
         TextSendMessage(text="恭喜你成功啟動 MEOW MEOW BOT !!")
     )
 
+
     line_bot_api.push_message(
         user_id,
-        TextSendMessage(text=DETECT_OBJECTS.IECS_NEWS)
+        IECS_NEWS_CLASS.MESSAGE
     )
 
-    flex_message = TextSendMessage(text=DETECT_OBJECTS.CODEFORCES_CONTEST_NEWS, quick_reply=AUTO_RESIGTER_CHECK_BUTTON)
     line_bot_api.push_message(
         user_id,
-        flex_message
+        CODEFORCES_CLASS.MESSAGE
     )
 
     Users[user_id].codeforces_register_state = 1
