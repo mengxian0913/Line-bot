@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/form.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assest/form.css') }}">
+    <!-- <link rel="stylesheet" href="../static/assest/form.css"> -->
+
     <title>Vincent's Linebot Information Setting</title>
 </head>
 <body>
@@ -13,44 +15,56 @@
     <form action="/submit" method="post">
 
         <div class="problem">
-            <label for="user_id">User ID：</label>
-            <input type="text" id="input" name="user_id" required>
+            <!-- <label for="user_id">User ID：</label> -->
+            <input type="text" id="user_id" name="user_id" class="input basic" placeholder="User ID">
         </div>
 
         <div class="problem">
-            <label for="username">名字：</label>
-            <input type="name" id="input" name="username" required>
+            <!-- <label for="username">名字：</label> -->
+            <input type="name" id="username" name="username" class="input basic" placeholder="Name">
         </div>
 
         <div class="problem">
-            <label for="email">電子郵件：</label>
-            <input type="email" id="input" name="email" required>
+            <!-- <label for="email">電子郵件：</label> -->
+            <input type="email" id="email" name="email" class="input basic" placeholder="Email">
         </div>
 
         <div class="problem">
-            <label for="NID_Account">NID Account：</label>
-            <input type="text" id="input" name="NID_Account" required>
+            <!-- <label for="NID_Account">NID Account：</label> -->
+            <input type="text" id="NID_Account" name="NID_Account" class="input basic" placeholder="NID Account">
         </div>
 
         <div class="problem">
-            <label for="NID_Password">NID Password：</label>
-            <input type="password" id="input" name="NID_Password" required>
+            <!-- <label for="NID_Password">NID Password：</label> -->
+            <input type="password" id="NID_Password" name="NID_Password" class="input basic" placeholder="NID Password">
         </div>
 
         <div class="problem">
-            <label for="Codeforces_Handle">Codeforces Handle：</label>
-            <input type="text" id="input" name="Codeforces_Handle" required>
+            <input type="checkbox" id="subscribe_codeforces" name="subscribe_codeforces">
+            <label for="subscribe_codeforces">Subscribe Codeforces</label>
         </div>
 
-        <div class="problem">
-            <label for="Codeforces_Password">Codeforces Password：</label>
-            <input type="password" id="input" name="Codeforces_Password" required>
+        <div class="problem" id = "Codeforces">
+            <!-- <label for="Codeforces_Handle">Codeforces Handle：</label> -->
+            <input type="text" id="Codeforces_Handle" name="Codeforces_Handle" class="input codeforces" placeholder="Codeforces Handle">
         </div>
+
+        <div class="problem" id="Codeforces">
+            <!-- <label for="Codeforces_Password">Codeforces Password：</label> -->
+            <input type="password" id="Codeforces_Password" name="Codeforces_Password" class="input codeforces" placeholder="Codeforces Password">
+        </div>
+
+        
+        <span class="alert">All problems of form above are required.</span>
 
         <div class="problem">
             <input type="submit" value="提交" id="submit">
         </div>
+
+
         
     </form>
 </body>
+    <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+    <!-- <script src="../static/js/form.js"></script> -->
 </html>

@@ -1,6 +1,6 @@
 from config import line_bot_api, handler
 from sent_messege import *
-from setting import *
+from User import *
 from codeforces_contest import *
 from auto_register_codeforces_contest import *
 from speech import *
@@ -160,19 +160,8 @@ def submit():
         user_id,
         TextSendMessage(text="恭喜你成功啟動 MEOW MEOW BOT !!")
     )
-
-
-    line_bot_api.push_message(
-        user_id,
-        IECS_NEWS_CLASS.MESSAGE
-    )
-
-    line_bot_api.push_message(
-        user_id,
-        CODEFORCES_CLASS.MESSAGE
-    )
-
-    Users[user_id].codeforces_register_state = 1
+    
+    Users[user_id].push_all_message()
 
     return "表單提交成功！"
 

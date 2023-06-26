@@ -52,11 +52,12 @@ body{
 form{
     min-height: fit-content;
     height: 80vh;
+    min-width: 400px;
     width: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     font-size: 20px;
     font-weight: 500;
     padding: 30px;
@@ -68,7 +69,7 @@ form{
 
     .problem{
         margin: 30px 0 0 0;
-        #input{
+        .input{
             padding: 0 10px 0 10px;
             font-size: 16px;
             font-weight: 350;
@@ -82,5 +83,25 @@ form{
         font-size: 20px;
         padding: 10px 15px;
         border-radius: 15px;
+    }
+}
+
+.alert{
+    display: none;
+
+    &.is-active{
+        display: block;
+        color: red;
+        font: 700;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+}
+
+#Codeforces{
+    display: none;
+
+    &.is-active{
+        display: block;
     }
 }

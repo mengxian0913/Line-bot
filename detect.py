@@ -1,6 +1,9 @@
-from setting import *
+from User import *
 from quick_message import *
-from config import line_bot_api, handler
+from config import(
+    IECS_NEWS_CLASS,
+    CODEFORCES_CLASS
+)
 from linebot import (
     LineBotApi,
     WebhookHandler
@@ -17,35 +20,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from quick_message import AUTO_RESIGTER_CHECK_BUTTON
 
-##############################################################################
 
-
-class CODEFORCES:
-    def __init__(self, contest_title, contest_date, contest_duration, contest_register) -> None:
-        self.CONTEST_TITLE = contest_title
-        self.CONTEST_START_TIME = contest_date
-        self.CONTEST_DURATION = contest_duration
-        self.CONTEST_REGISTER_URL = contest_register
-        self.IMG = 'https://cdn.iconscout.com/icon/free/png-256/free-code-forces-3628695-3029920.png'
-        self.MESSAGE = None
-        return
-
-
-class IECS_NEWS:
-    def __init__(self, title, link, date, img) -> None:
-        self.TITLE = title
-        self.LINK = link
-        self.DATE = date
-        self.IMG = img
-        self.MESSAGE = None
-        return
-
-##############################################################################
-
-CODEFORCES_CLASS = CODEFORCES(None, None, None, None)
-IECS_NEWS_CLASS =  IECS_NEWS(None, None, None, None)
-
-##############################################################################
 
 # ALL NEWS ABOUT IECS
 
@@ -155,10 +130,7 @@ def DETECT_NEWS():
                 )
                 
                 for i in Users:
-                    line_bot_api.push_message(
-                        i,
-                        IECS_NEWS_CLASS.MESSAGE
-                    )
+                    Users[i].push_IECS_news()
 
 
             CODEFORCES_CURRENT_NEWS = CODEFORCES_CONTEST()
@@ -191,10 +163,7 @@ def DETECT_NEWS():
                 )
 
                 for i in Users:
-                    line_bot_api.push_message(
-                        i.user_id,
-                        CODEFORCES_CLASS.MESSAGE
-                    )
+                    Users[i].push_CODEFORCES_news()
 
         except:
             break

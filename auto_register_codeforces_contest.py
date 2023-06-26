@@ -1,8 +1,8 @@
 from quick_message import *
-from detect import (
+from config import(
+    line_bot_api,
     CODEFORCES_CLASS
 )
-from config import line_bot_api, handler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
