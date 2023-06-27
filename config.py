@@ -3,8 +3,8 @@ from linebot import (
     WebhookHandler
 )
 
-Channel_Secret = "8756120038fb41f4bc31560297cd1e9e"
-Channel_AccessToken = "PU/J/S/o1mpxHkQS0fFJjwtutZGC6bZaoSZL7tsvNyzVdGMkJr+Ie4+uZeONsLO5nydcRcTKD0hALsBtdzOvnXqlRk/jBZclSiMyqZefDG2qtWa2utpPXXR7g1gab4eW9gQaAJ9x1A9s6naH+VO+9QdB04t89/1O/w1cDnyilFU="
+Channel_Secret = "76945093850f04f157b85529561b4988"
+Channel_AccessToken = "ZB/jCRJx22gAaDpRVKEUEo0LklhezGlcFEAYTSCFx36IqiNpLF14U4A9POTIz9hoVx/6jfEH4ToX0wYHYuTmz9WV51DfLTLvWkSL6NCyWFW6Jrvd5JF/rsAtuQTHKWRunalqCgxqQZ7XYXzngRWtTQdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
 

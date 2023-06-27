@@ -1,10 +1,11 @@
-from sent_messege import sentmessege
+from sent_messege import sentmessage
 import requests
 from bs4 import BeautifulSoup as bs
 from linebot.models import *
 from linebot import LineBotApi
 from config import *
 from quick_message import *
+from User import *
 # SPEECH NWES BOT
 feng_chia_url = "https://www.iecs.fcu.edu.tw/"
 url = "https://www.iecs.fcu.edu.tw/news/?category=speech"
@@ -61,7 +62,7 @@ def catch(now, speech_title):
 
     return
 
-def getspeech(reply_token_copy):
+def getspeech(reply_token_copy, user_id):
     global columns
     columns.clear()
 
@@ -92,7 +93,7 @@ def getspeech(reply_token_copy):
     carousel_template_message = TemplateSendMessage(
         alt_text= 'get speech',
         template= template,
-        quick_reply=QUICK_MESSAGE_BUTTON
+        quick_reply= Users[user_id].QUICK_MESSAGE_BUTTON
     )
 
     line_bot_api.reply_message(

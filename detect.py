@@ -159,8 +159,7 @@ def DETECT_NEWS():
 
                 FCU_NEWS_CLASS.MESSAGE = TemplateSendMessage(
                     alt_text = 'FCU NEWS',
-                    template = FCU_NEWS_template,
-                    quick_reply = QUICK_MESSAGE_BUTTON
+                    template = FCU_NEWS_template
                 )
 
                 for i in Users:
@@ -189,8 +188,7 @@ def DETECT_NEWS():
 
                 IECS_NEWS_CLASS.MESSAGE = TemplateSendMessage(
                     alt_text='IECS news',
-                    template=iecs_template,
-                    quick_reply=QUICK_MESSAGE_BUTTON
+                    template=iecs_template
                 )
                 
                 for i in Users:
@@ -220,7 +218,6 @@ def DETECT_NEWS():
                 CODEFORCES_CLASS.MESSAGE = TemplateSendMessage(
                     alt_text = 'codeforces contest',
                     template = codeforces_template,
-                    quick_reply = QUICK_MESSAGE_BUTTON
                 )
 
                 for i in Users:

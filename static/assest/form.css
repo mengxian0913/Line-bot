@@ -88,4 +88,19 @@ form #submit {
 }
 #Codeforces.is-active {
   display: block;
+}
+
+#constellation_subscribe {
+  display: none;
+}
+#constellation_subscribe #constellation {
+  padding: 0 10px 0 10px;
+  font-size: 16px;
+  font-weight: 350;
+  height: 25px;
+  min-width: 100px;
+  border-radius: 10px;
+}
+#constellation_subscribe.is-active {
+  display: block;
 }/*# sourceMappingURL=form.css.map */

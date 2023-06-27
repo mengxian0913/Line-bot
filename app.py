@@ -89,14 +89,11 @@ def handle_message(event):
     if Users.get(current_user_id) == None:
         form_url = request.host_url + 'form'
         messege = f"請填寫個人信息啟動 meowmeow bot!:    {form_url}"
-        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
-        line_bot_api.push_message(current_user_id, TextSendMessage(text=current_user_id))
-        return
-    
-    elif Users[current_user_id].user_name == None:
-        form_url = request.host_url + 'form'
-        messege = f"請填寫個人信息啟動 meowmeow bot!:    {form_url}"
-        sentmessege(reply_token_copy, messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
+        line_bot_api.reply_message(
+            reply_token_copy,
+            TextSendMessage(text = messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
+        )
+        
         line_bot_api.push_message(current_user_id, TextSendMessage(text=current_user_id))
         return
 
@@ -108,9 +105,10 @@ def handle_message(event):
             crawler_thread.start()
             return
         
+    
     now_event = 0
-    for i in range(0, len(keywords)):
-        for word in keywords[i]:
+    for i in range(0, len(Users[current_user_id].keywords)):
+        for word in Users[current_user_id].keywords[i]:
             if text == word:
              now_event = i
              break
@@ -120,7 +118,7 @@ def handle_message(event):
     if i == 2:
         Users[current_user_id].codeforces_register_state = 1
 
-    crawler_thread = threading.Thread(target=function_list[now_event], args=(reply_token_copy,))
+    crawler_thread = threading.Thread(target=function_list[now_event], args=(reply_token_copy, current_user_id, ))
     crawler_thread.start()
 
     return
@@ -133,7 +131,6 @@ def handle_follow(event):
     global form_url
     form_url = request.host_url + 'form'
     user_id = event.source.user_id
-    Users[user_id] = User(None, None, None, None, None, None, None)
     message = "歡迎加入Meowmeow Line Bot！請填寫表單提供信息完成設定！"
     line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form_url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
     line_bot_api.push_message(user_id, TextSendMessage(text=user_id))
@@ -147,6 +144,7 @@ def form():
 @app.route('/submit', methods=['POST'])
 def submit():
     print("Success to submit the form!")
+
     user_id = request.form.get('user_id')
     name = request.form.get('username')
     email = request.form.get('email')
@@ -154,14 +152,14 @@ def submit():
     nid_password = request.form.get('NID_Password')
     codeforces_handle = request.form.get('Codeforces_Handle')
     codeforces_password = request.form.get('Codeforces_Password')
-    Users[user_id] = (User(user_id, name, email, nid_account, nid_password, codeforces_handle, codeforces_password))
-
+    constellation = request.form.get('constellation')
+    
     line_bot_api.push_message(
         user_id,
         TextSendMessage(text="恭喜你成功啟動 MEOW MEOW BOT !!")
     )
-    
-    Users[user_id].push_all_message()
+
+    Users[user_id] = (User(user_id, name, email, nid_account, nid_password, codeforces_handle, codeforces_password, constellation))
 
     return "表單提交成功！"
 
