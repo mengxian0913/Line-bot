@@ -30,10 +30,20 @@ class IECS_NEWS:
         self.IMG = img
         self.MESSAGE = None
         return
+    
+
+class FCU_NEWS:
+    def __init__(self, title, link, date, img) -> None:
+        self.TITLE = title
+        self.LINK = link
+        self.DATE = date
+        self.IMG = img
+        self.MESSAGE = None
 
 ##############################################################################
 
 CODEFORCES_CLASS = CODEFORCES(None, None, None, None)
 IECS_NEWS_CLASS =  IECS_NEWS(None, None, None, None)
+FCU_NEWS_CLASS = FCU_NEWS(None, None, None, None)
 
 ##############################################################################

@@ -2,7 +2,8 @@ from User import *
 from quick_message import *
 from config import(
     IECS_NEWS_CLASS,
-    CODEFORCES_CLASS
+    CODEFORCES_CLASS,
+    FCU_NEWS_CLASS
 )
 from linebot import (
     LineBotApi,
@@ -20,12 +21,44 @@ import requests
 from bs4 import BeautifulSoup as bs
 from quick_message import AUTO_RESIGTER_CHECK_BUTTON
 
+FCU_URL = "https://www.iecs.fcu.edu.tw"
+
+# FENG CHIA NEWS
+
+FCU_NEWS_URL = "https://www.fcu.edu.tw/events/"
+
+def GET_FCU_NEWS():
+
+    response = requests.get(FCU_NEWS_URL)
+    soup = bs(response.text, "html.parser")
+    post = soup.find('a', class_='m-news-card')
+
+    post_link = post.get('href')
+
+    post_image = post.find('div', class_='m-news-card__img-scale')
+    post_image = str(post_image)
+    post_image = post_image.split('(\'')[1]
+    post_image = post_image.split('\'')[0]
+
+    post_title = post.find('p', class_='m-news-card__title')
+    post_title = post_title.text.strip()
+    
+    post_time = post.find('p', class_='m-news-card__info-text')
+    post_time = post_time.text.strip()
+
+    FCU_NEWS_INFO = {
+        'title': post_title,
+        'image': post_image,
+        'date': post_time,
+        'link': post_link
+    }
+
+    return FCU_NEWS_INFO
 
 
 # ALL NEWS ABOUT IECS
 
 IECS_NEWS_URL = "https://www.iecs.fcu.edu.tw/news/"
-FCU_URL = "https://www.iecs.fcu.edu.tw"
 FIRST_SEARCH = 1
 
 def GET_IECS_NEWS():
@@ -103,6 +136,37 @@ def DETECT_NEWS():
 
     while True:
         try:
+
+            FCU_CURRENT_NEWS = GET_FCU_NEWS()
+            if FCU_NEWS_CLASS.TITLE != FCU_CURRENT_NEWS['title']:
+                FCU_NEWS_CLASS.TITLE = FCU_CURRENT_NEWS['title']
+                FCU_NEWS_CLASS.IMG = FCU_CURRENT_NEWS['image']
+                FCU_NEWS_CLASS.DATE = FCU_CURRENT_NEWS['date']
+                FCU_NEWS_CLASS.LINK = FCU_CURRENT_NEWS['link']
+
+                FCU_NEWS_template = ButtonsTemplate(
+                    thumbnail_image_url = FCU_NEWS_CLASS.IMG,
+                    title = FCU_NEWS_CLASS.TITLE,
+                    text = FCU_NEWS_CLASS.DATE,
+
+                    actions=[
+                        URIAction(
+                            label = '點我查看更多',
+                            uri = FCU_NEWS_CLASS.LINK
+                        )
+                    ]
+                )
+
+                FCU_NEWS_CLASS.MESSAGE = TemplateSendMessage(
+                    alt_text = 'FCU NEWS',
+                    template = FCU_NEWS_template,
+                    quick_reply = QUICK_MESSAGE_BUTTON
+                )
+
+                for i in Users:
+                    Users[i].push_all_message()
+
+
             IECS_CURRENT_NEWS = GET_IECS_NEWS()
             if IECS_NEWS_CLASS.TITLE != IECS_CURRENT_NEWS['title']:
                 IECS_NEWS_CLASS.TITLE = IECS_CURRENT_NEWS['title']
@@ -135,9 +199,6 @@ def DETECT_NEWS():
 
             CODEFORCES_CURRENT_NEWS = CODEFORCES_CONTEST()
             if CODEFORCES_CLASS.CONTEST_TITLE != CODEFORCES_CURRENT_NEWS['title']:
-                
-                for i in Users:
-                    Users[i].codeforces_register_state = 1
 
                 CODEFORCES_CLASS.CONTEST_TITLE = CODEFORCES_CURRENT_NEWS['title']
                 CODEFORCES_CLASS.CONTEST_START_TIME = CODEFORCES_CURRENT_NEWS['start_time']

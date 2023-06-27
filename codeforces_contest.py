@@ -12,7 +12,7 @@ from quick_message import AUTO_RESIGTER_CHECK_BUTTON
 
 
 def CODEFORCES_CURRENT_CONTEST(token):
-    
+
     line_bot_api.reply_message(
         token,
         CODEFORCES_CLASS.MESSAGE
