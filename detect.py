@@ -110,7 +110,9 @@ def CODEFORCES_CONTEST():
     contest_start_time = contest_info[2].get_text(strip=True)
     contest_length = contest_info[3].get_text(strip=True)
     contest_register = contest_info[5].find("a")
-    contest_register = CODEFORCES_URL + contest_register.get("href")
+    
+    if contest_register != None:
+        contest_register = CODEFORCES_URL + contest_register.get("href")
 
     if len(contest_title) >= 30:
         contest_title = contest_title[:30] + '...'
