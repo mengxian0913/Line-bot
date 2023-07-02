@@ -1,4 +1,8 @@
-from config import line_bot_api, handler
+from config import (
+    line_bot_api, 
+    handler, 
+    form_url
+)
 from User import *
 from codeforces_contest import *
 from auto_register_codeforces_contest import *
@@ -80,7 +84,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    global CODEFORCES_CLASS, form_url
+    global CODEFORCES_CLASS
     reply_token_copy = (event.reply_token)
     text = event.message.text.lower()
     current_user_id = event.source.user_id
@@ -127,7 +131,6 @@ def handle_message(event):
 @handler.add(event=events.FollowEvent)
 def handle_follow(event):
     print("new member join")
-    global form_url
     form_url = request.host_url + 'form'
     user_id = event.source.user_id
     message = "歡迎加入Meowmeow Line Bot！請填寫表單提供信息完成設定！"
@@ -161,7 +164,6 @@ def submit():
     Users[user_id] = (User(user_id, name, email, nid_account, nid_password, codeforces_handle, codeforces_password, constellation))
 
     return "表單提交成功！"
-
 
 if __name__ == "__main__":
     app.debug = True

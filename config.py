@@ -8,6 +8,8 @@ Channel_AccessToken = "ZB/jCRJx22gAaDpRVKEUEo0LklhezGlcFEAYTSCFx36IqiNpLF14U4A9P
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
 
+form_url = ""
+
 ##############################################################################
 ## NEWS
 
