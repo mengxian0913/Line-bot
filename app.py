@@ -105,10 +105,9 @@ def handle_message(event):
         return
 
     if Users[current_user_id].codeforces_register_state == 1:
-        Users[current_user_id].codeforces_register_state = 0
         if text == 'register':
             print("go to register")
-            crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy, Users[current_user_id].codeforces_handle, Users[current_user_id].codeforces_password))
+            crawler_thread = threading.Thread(target=REGISTER_CODEFORCES_CONTEST, args=(reply_token_copy, Users[current_user_id].codeforces_handle, Users[current_user_id].codeforces_password, current_user_id, ))
             crawler_thread.start()
             return
         

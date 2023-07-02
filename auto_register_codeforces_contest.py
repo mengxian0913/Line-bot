@@ -16,10 +16,20 @@ from linebot.models import (
     TextSendMessage
 )
 
+from User import Users
+
 # AUTO_REGISTER_CODEFORCES_CONTEST
 
-def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD):
+def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD, user_id):
     print("CODEFORCES_CONTEST_REGISTER_URL", CODEFORCES_CLASS.CONTEST_REGISTER_URL)
+    if CODEFORCES_CLASS.CONTEST_REGISTER_URL == None:
+        line_bot_api.reply_message(
+            reply_token_copy,
+            TextSendMessage(text="尚未開放註冊", quick_reply=Users[user_id].QUICK_MESSAGE_BUTTON)
+        )
+        return
+    
+    Users[user_id].codeforces_register_state = 0
     Chromeoptions = Options()
     Chromeoptions.add_argument('--headless')
     s = Service('./chromedriver')
