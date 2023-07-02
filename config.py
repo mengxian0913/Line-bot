@@ -55,5 +55,5 @@ FCU_NEWS_CLASS = FCU_NEWS(None, None, None, None)
 class form:
     url = ""
 
-form = form()
+FORM = form()
 ##############################################################################

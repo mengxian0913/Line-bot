@@ -2,7 +2,7 @@ import threading
 from config import (
     line_bot_api, 
     handler, 
-    form
+    FORM
 )
 from User import *
 from codeforces_contest import *
@@ -10,6 +10,9 @@ from auto_register_codeforces_contest import *
 from speech import *
 from meow import *
 from quick_message import *
+from user_setting_page import(
+    USER_SETTING
+)
 
 from detect import (
     CODEFORCES_CLASS,
@@ -58,7 +61,7 @@ DETECT_START = 0
 function_dic = {
     'meow': meow,
     '演講': getspeech,
-    '設定': meow,
+    '設定': USER_SETTING,
     'codeforces contest': CODEFORCES_CURRENT_CONTEST
 }
 
@@ -88,14 +91,14 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    global CODEFORCES_CLASS
+    global CODEFORCES_CLASS, FORM
     reply_token_copy = (event.reply_token)
     text = event.message.text.lower()
     current_user_id = event.source.user_id
 
     if Users.get(current_user_id) == None:
-        form.url = request.host_url + 'form'
-        messege = f"請填寫個人信息啟動 meowmeow bot!:    {form.url}"
+        FORM.url = request.host_url + 'form'
+        messege = f"請填寫個人信息啟動 meowmeow bot!:    {FORM.url}"
         line_bot_api.reply_message(
             reply_token_copy,
             TextSendMessage(text = messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
@@ -128,10 +131,10 @@ def handle_message(event):
 @handler.add(event=events.FollowEvent)
 def handle_follow(event):
     print("new member join")
-    form.url = request.host_url + 'form'
+    FORM.url = request.host_url + 'form'
     user_id = event.source.user_id
     message = "歡迎加入Meowmeow Line Bot！請填寫表單提供信息完成設定！"
-    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form.url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
+    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + FORM.url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
     line_bot_api.push_message(user_id, TextSendMessage(text=user_id))
     return "please setting the required information to start the function!"
 
