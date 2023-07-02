@@ -63,13 +63,13 @@ def REGISTER_CODEFORCES_CONTEST(reply_token_copy, ACCOUNT, PASSWORD, user_id):
         driver.close()
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Successful Registered", quick_reply=QUICK_MESSAGE_BUTTON)
+            TextSendMessage(text="Successful Registered", quick_reply=Users[user_id].QUICK_MESSAGE_BUTTON)
         )
 
     else: 
         line_bot_api.reply_message(
             reply_token_copy,
-            TextSendMessage(text="Registered Alreadey", quick_reply=QUICK_MESSAGE_BUTTON)
+            TextSendMessage(text="Registered Alreadey", quick_reply=Users[user_id].QUICK_MESSAGE_BUTTON)
         )
 
     return
