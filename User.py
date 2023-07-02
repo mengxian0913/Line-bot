@@ -35,15 +35,19 @@ class User:
         self.push_all_message()
 
     def set_quick_message(self, codeforces_subscribe_state, horoscope_subscribe_state):
-        self.keywords = keywords
+        global keywords
+        self.KEYWORDS = keywords.copy()
+        
         if codeforces_subscribe_state == 1:
-            self.keywords.append(codeforces_keywords)
+            self.KEYWORDS.append(codeforces_keywords)
+
         if horoscope_subscribe_state == 1:
-            self.keywords.append(luck_keywords)
+            self.KEYWORDS.append(luck_keywords)
+
         
         self.messages_items = []
-        for i in range(0, len(self.keywords)):
-            tmp_message = QuickReplyButton(action=MessageAction(label=self.keywords[i][0], text=self.keywords[i][0]))
+        for i in range(0, len(self.KEYWORDS)):
+            tmp_message = QuickReplyButton(action=MessageAction(label=self.KEYWORDS[i][0], text=self.KEYWORDS[i][0]))
             self.messages_items.append(tmp_message)
         
         self.QUICK_MESSAGE_BUTTON = QuickReply(self.messages_items)

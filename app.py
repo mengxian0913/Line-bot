@@ -163,6 +163,8 @@ def submit():
 
     Users[user_id] = (User(user_id, name, email, nid_account, nid_password, codeforces_handle, codeforces_password, constellation))
 
+    print(codeforces_handle)
+
     return "表單提交成功！"
 
 if __name__ == "__main__":
