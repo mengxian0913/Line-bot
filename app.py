@@ -10,6 +10,9 @@ from auto_register_codeforces_contest import *
 from speech import *
 from meow import *
 from quick_message import *
+from luck import(
+    GET_LUCK
+)
 from user_setting_page import(
     USER_SETTING
 )
@@ -53,6 +56,9 @@ reply_text = ""
 
 DETECT = threading.Thread(target=DETECT_NEWS)
 DETECT_START = 0
+
+LUCK  =threading.Thread(target=GET_LUCK)
+
 #######################################################
 
 # All of the function
@@ -78,6 +84,7 @@ def callback():
     global DETECT_START
     if DETECT_START == 0:
         DETECT.start()
+        LUCK.start()
         DETECT_START = 1
 
     signature = request.headers['X-Line-Signature']

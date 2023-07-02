@@ -25,6 +25,7 @@ class User:
         self.codeforces_register_state = 0
 
         self.constellation = constellation
+        self.LUCK_MESSAGE = None
 
         ## subscribe
         self.codeforces_subscribe_state = (len(self.codeforces_handle) != 0 and len(self.codeforces_password) != 0)
@@ -86,7 +87,13 @@ class User:
             self.push_CODEFORCES_news()
         return
     
-    def get_horoscope(self):
+    def push_LUCK_message(self):
+        if self.horoscope_subscribe_state == 1:
+            self.LUCK_MESSAGE.quick_reply = self.QUICK_MESSAGE_BUTTON
+            line_bot_api.push_message(
+                self.user_id,
+                self.LUCK_MESSAGE
+            )
         return
     
             
