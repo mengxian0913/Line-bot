@@ -1,7 +1,8 @@
+import threading
 from config import (
     line_bot_api, 
     handler, 
-    form_url
+    form
 )
 from User import *
 from codeforces_contest import *
@@ -37,11 +38,6 @@ from linebot.models import (
     events
 )
 
-import time
-import threading
-from copy import deepcopy
-import requests
-from bs4 import BeautifulSoup as bs
 
 ############################################################
 
@@ -57,7 +53,15 @@ DETECT_START = 0
 #######################################################
 
 # All of the function
-function_list = [meow, getspeech, CODEFORCES_CURRENT_CONTEST]
+# function_list = [meow, getspeech, CODEFORCES_CURRENT_CONTEST]
+
+function_dic = {
+    'meow': meow,
+    '演講': getspeech,
+    '設定': meow,
+    'codeforces contest': CODEFORCES_CURRENT_CONTEST
+}
+
 # linebot app
 #######################################################
 
@@ -90,8 +94,8 @@ def handle_message(event):
     current_user_id = event.source.user_id
 
     if Users.get(current_user_id) == None:
-        form_url = request.host_url + 'form'
-        messege = f"請填寫個人信息啟動 meowmeow bot!:    {form_url}"
+        form.url = request.host_url + 'form'
+        messege = f"請填寫個人信息啟動 meowmeow bot!:    {form.url}"
         line_bot_api.reply_message(
             reply_token_copy,
             TextSendMessage(text = messege + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)")
@@ -108,20 +112,14 @@ def handle_message(event):
             crawler_thread.start()
             return
         
-    
-    now_event = 0
-    for i in range(0, len(Users[current_user_id].keywords)):
-        for word in Users[current_user_id].keywords[i]:
-            if text == word:
-             now_event = i
-             break
-        if now_event != 0:
-            break
-    
-    if i == 2:
-        Users[current_user_id].codeforces_register_state = 1
 
-    crawler_thread = threading.Thread(target=function_list[now_event], args=(reply_token_copy, current_user_id, ))
+    now_event = None
+    try:
+        now_event = function_dic[text]
+    except:
+        now_event = meow
+
+    crawler_thread = threading.Thread(target=now_event, args=(reply_token_copy, current_user_id, ))
     crawler_thread.start()
 
     return
@@ -131,10 +129,10 @@ def handle_message(event):
 @handler.add(event=events.FollowEvent)
 def handle_follow(event):
     print("new member join")
-    form_url = request.host_url + 'form'
+    form.url = request.host_url + 'form'
     user_id = event.source.user_id
     message = "歡迎加入Meowmeow Line Bot！請填寫表單提供信息完成設定！"
-    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form_url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
+    line_bot_api.push_message(user_id, TextSendMessage(text=message + "\n" + form.url + "\n 底下是你的 user id! \n(p.s.請小心保管你的個資!!)"))
     line_bot_api.push_message(user_id, TextSendMessage(text=user_id))
     return "please setting the required information to start the function!"
 

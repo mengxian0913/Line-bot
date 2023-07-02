@@ -8,7 +8,6 @@ Channel_AccessToken = "ZB/jCRJx22gAaDpRVKEUEo0LklhezGlcFEAYTSCFx36IqiNpLF14U4A9P
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
 
-form_url = ""
 
 ##############################################################################
 ## NEWS
@@ -48,4 +47,13 @@ CODEFORCES_CLASS = CODEFORCES(None, None, None, None)
 IECS_NEWS_CLASS =  IECS_NEWS(None, None, None, None)
 FCU_NEWS_CLASS = FCU_NEWS(None, None, None, None)
 
+##############################################################################
+
+
+##############################################################################
+## form 
+class form:
+    url = ""
+
+form = form()
 ##############################################################################

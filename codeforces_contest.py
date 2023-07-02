@@ -14,6 +14,7 @@ from User import *
 
 def CODEFORCES_CURRENT_CONTEST(reply_token, user_id):
     CODEFORCES_CLASS.MESSAGE.quick_reply = Users[user_id].QUICK_MESSAGE_BUTTON
+    Users[user_id].codeforces_register_state = 1
     line_bot_api.reply_message(
         reply_token,
         CODEFORCES_CLASS.MESSAGE
