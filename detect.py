@@ -163,7 +163,7 @@ def DETECT_NEWS():
                 )
 
                 for i in Users:
-                    Users[i].push_all_message()
+                    Users[i].push_FCU_news()
 
 
             IECS_CURRENT_NEWS = GET_IECS_NEWS()

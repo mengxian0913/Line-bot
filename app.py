@@ -1,5 +1,4 @@
 from config import line_bot_api, handler
-from sent_messege import *
 from User import *
 from codeforces_contest import *
 from auto_register_codeforces_contest import *

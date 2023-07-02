@@ -1,4 +1,3 @@
-from sent_messege import sentmessage
 import requests
 from bs4 import BeautifulSoup as bs
 from linebot.models import *
