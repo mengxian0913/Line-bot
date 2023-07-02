@@ -11,10 +11,14 @@ from speech import *
 from meow import *
 from quick_message import *
 from luck import(
-    GET_LUCK
+    GET_LUCK,
+    get_the_horoscope
 )
 from user_setting_page import(
     USER_SETTING
+)
+from luck_state import(
+    LUCK_STATE
 )
 
 from detect import (
@@ -68,7 +72,8 @@ function_dic = {
     'meow': meow,
     '演講': getspeech,
     '設定': USER_SETTING,
-    'codeforces contest': CODEFORCES_CURRENT_CONTEST
+    'codeforces contest': CODEFORCES_CURRENT_CONTEST,
+    '運勢' : LUCK_STATE
 }
 
 # linebot app
@@ -170,7 +175,6 @@ def submit():
 
     Users[user_id] = (User(user_id, name, email, nid_account, nid_password, codeforces_handle, codeforces_password, constellation))
 
-    print(codeforces_handle)
 
     return "表單提交成功！"
 

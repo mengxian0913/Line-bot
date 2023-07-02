@@ -63,7 +63,7 @@ def get_the_horoscope(constellation):
             
     MESSAGE = TemplateSendMessage(
         alt_text = 'codeforces contest',
-        template = lucky_template
+        template = lucky_template,
     )
 
     return MESSAGE
@@ -75,11 +75,11 @@ def GET_LUCK():
     while True:
         try:
             current_time = datetime.now().time()
-            if current_time.hour == 7 and current_time.minute == 40:
-                for i in Users:
-                    Users[i].LUCK_MESSAGE = get_the_horoscope(Users[i].constellation)
+            for i in Users:
+                Users[i].LUCK_MESSAGE = get_the_horoscope(Users[i].constellation)
+                if current_time.hour == 7 and current_time.minute == 40:
                     Users[i].push_LUCK_message()
         except:
             print("error")
 
-        time.sleep(30)
+        time.sleep(3)
