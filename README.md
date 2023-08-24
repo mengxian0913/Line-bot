@@ -8,7 +8,7 @@
 
 ## 功能
 
-==必須先註冊才能開啟功能==
+**必須先註冊才能開啟功能**
 
 - 逢甲最新消息提醒
 
@@ -19,3 +19,7 @@
 - ~~Codeforces Contest 提醒、自動註冊~~
 
 - 每日運勢
+
+---
+
+<img src="static/image/IMG_1573.PNG" style="width:200px; height:auto;"></img>
