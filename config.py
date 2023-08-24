@@ -4,7 +4,7 @@ from linebot import (
 )
 
 Channel_Secret = "76945093850f04f157b85529561b4988"
-Channel_AccessToken = "ZB/jCRJx22gAaDpRVKEUEo0LklhezGlcFEAYTSCFx36IqiNpLF14U4A9POTIz9hoVx/6jfEH4ToX0wYHYuTmz9WV51DfLTLvWkSL6NCyWFW6Jrvd5JF/rsAtuQTHKWRunalqCgxqQZ7XYXzngRWtTQdB04t89/1O/w1cDnyilFU="
+Channel_AccessToken = "5p7Aj/8UlBFkhiwn0wgajxROjLJzh7ZHXZugP+wXe6fGCEAvLyiny45uV7z9kvqPVx/6jfEH4ToX0wYHYuTmz9WV51DfLTLvWkSL6NCyWFWTs8hDDfm28pR2MmjOEPh5kFxaQ1wBijIVSdPLqDBogwdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(Channel_AccessToken)
 handler = WebhookHandler(Channel_Secret)
 
@@ -20,6 +20,7 @@ class CODEFORCES:
         self.CONTEST_REGISTER_URL = contest_register
         self.IMG = 'https://cdn.iconscout.com/icon/free/png-256/free-code-forces-3628695-3029920.png'
         self.MESSAGE = None
+        self.URL = "https://codeforces.com/contests"
         return
 
 

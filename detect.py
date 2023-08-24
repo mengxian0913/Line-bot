@@ -210,9 +210,9 @@ def DETECT_NEWS():
                     title = CODEFORCES_CLASS.CONTEST_TITLE,
                     text = f"Start: {CODEFORCES_CLASS.CONTEST_START_TIME}\nDuration: {CODEFORCES_CLASS.CONTEST_DURATION}",
                     actions=[
-                        MessageAction(
-                            label='Register',
-                            text = 'Register'
+                        URIAction(
+                            label='點我查看更多',
+                            uri = CODEFORCES_CLASS.URL,
                         )
                     ]
                 )

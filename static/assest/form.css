@@ -36,9 +36,9 @@ body {
 }
 
 form {
-  min-height: -moz-fit-content;
-  min-height: fit-content;
-  height: 80vh;
+  min-height: 80vh;
+  height: -moz-fit-content;
+  height: fit-content;
   min-width: 400px;
   width: -moz-fit-content;
   width: fit-content;
