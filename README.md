@@ -16,6 +16,6 @@
 
 - 查看演講最新資訊演講提醒
 
-- Codeforces Contest 提醒、自動註冊
+- ~~Codeforces Contest 提醒、自動註冊~~
 
 - 每日運勢
